@@ -4,7 +4,7 @@
  * Everything is stored locally on the device (localStorage). No server, no accounts.
  */
 
-const APP_VERSION = '1.0';
+const APP_VERSION = '1.1';
 const LANGS = ['hr', 'en', 'it', 'de'];
 
 const LANG_META = {
@@ -114,6 +114,9 @@ const DEFAULT_PHRASES = [
   { id: 'b-love', cat: 'common', t: { hr: 'Volim te', en: 'I love you', it: 'Ti voglio bene', de: 'Ich habe dich lieb' } },
   { id: 'b-later', cat: 'common', t: { hr: 'Ne sada, kasnije', en: 'Not now, maybe later', it: 'Non adesso, più tardi', de: 'Nicht jetzt, später' } },
   { id: 'b-pillow', cat: 'common', t: { hr: 'Namjestite mi jastuk, molim vas', en: 'Please adjust my pillow', it: 'Per favore, sistemate il cuscino', de: 'Bitte rücken Sie mein Kissen zurecht' } },
+  { id: 'b-bananas', cat: 'common', t: { hr: 'Jedi banane', en: 'Eat bananas', it: 'Mangia le banane', de: 'Iss Bananen' } },
+  { id: 'b-scratch', cat: 'common', t: { hr: 'Češkanje, molim', en: 'Please scratch me', it: 'Per favore, grattatemi', de: 'Bitte kratzen Sie mich' } },
+  { id: 'b-amen', cat: 'common', t: { hr: 'Amen', en: 'Amen', it: 'Amen', de: 'Amen' } },
 ];
 
 /* ---------------- storage ---------------- */

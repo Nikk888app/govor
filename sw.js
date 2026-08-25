@@ -1,7 +1,7 @@
 /* Govor service worker — cache-first for a fully offline static app.
    Bump CACHE on every deploy so clients pick up new files. */
 
-const CACHE = 'govor-v1';
+const CACHE = 'govor-v2';
 
 const ASSETS = [
   './',
