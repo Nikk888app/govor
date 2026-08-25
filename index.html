@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Govor</title>
+<meta name="description" content="Govor — offline speech board (AAC). Tap phrases to speak them aloud.">
+<meta name="theme-color" content="#0f1620">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Govor">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header id="topbar">
+  <div id="app-title">Govor</div>
+  <div id="topbar-actions">
+    <button id="btn-lang" class="topbtn" type="button"></button>
+    <button id="btn-edit" class="topbtn" type="button"></button>
+    <button id="btn-settings" class="topbtn" type="button">⚙️</button>
+  </div>
+  <div id="lang-menu" class="hidden"></div>
+</header>
+
+<div id="voice-warning" class="hidden" role="status">
+  <span id="voice-warning-text"></span>
+  <button id="voice-warning-close" type="button">✕</button>
+</div>
+
+<main id="main">
+  <section id="sec-recent" class="section hidden">
+    <h2 id="h-recent" class="section-title"></h2>
+    <div id="recent-row" class="grid recent-grid"></div>
+  </section>
+  <section id="sec-urgent" class="section">
+    <h2 id="h-urgent" class="section-title urgent-title"></h2>
+    <div id="grid-urgent" class="grid"></div>
+  </section>
+  <section id="sec-common" class="section">
+    <h2 id="h-common" class="section-title"></h2>
+    <div id="grid-common" class="grid"></div>
+  </section>
+</main>
+
+<footer id="composer">
+  <div id="speak-status" aria-live="polite"><span id="speak-status-icon">🔊</span><span id="speak-status-text"></span></div>
+  <div id="composer-top">
+    <div id="freetext-langs" class="chip-row"></div>
+    <button id="btn-repeat" class="iconbtn" type="button">🔁</button>
+  </div>
+  <div id="composer-bottom">
+    <input id="freetext" type="text" autocomplete="off" enterkeyhint="send">
+    <button id="btn-clear-text" class="iconbtn" type="button">✕</button>
+    <button id="btn-speak-text" type="button"></button>
+  </div>
+</footer>
+
+<div id="overlay" class="hidden">
+  <div id="settings-panel" class="panel hidden">
+    <div class="panel-head"><h2 id="s-title"></h2><button id="btn-settings-close" class="iconbtn" type="button">✕</button></div>
+    <h3 id="s-lang-label" class="setting-label"></h3>
+    <div id="s-lang-grid"></div>
+    <div class="setting">
+      <div class="setting-row"><label id="s-rate-label" for="rate" class="setting-label"></label><span id="rate-val" class="setting-val"></span></div>
+      <input id="rate" type="range" min="0.5" max="1.5" step="0.05">
+    </div>
+    <div class="setting">
+      <div class="setting-row"><label id="s-vol-label" for="volume" class="setting-label"></label><span id="vol-val" class="setting-val"></span></div>
+      <input id="volume" type="range" min="0.2" max="1" step="0.05">
+    </div>
+    <h3 id="s-voices-title" class="setting-label"></h3>
+    <p id="s-voices-hint"></p>
+    <div id="voice-rows"></div>
+    <p id="s-version"></p>
+  </div>
+  <div id="editor-panel" class="panel hidden">
+    <div class="panel-head"><h2 id="e-title"></h2><button id="btn-editor-close" class="iconbtn" type="button">✕</button></div>
+    <label id="e-text-label" class="setting-label" for="e-text"></label>
+    <textarea id="e-text" rows="3"></textarea>
+    <div id="e-lang-block">
+      <h3 id="e-lang-label" class="setting-label"></h3>
+      <div id="e-lang-chips" class="chip-row wrap"></div>
+    </div>
+    <div id="e-cat-block">
+      <h3 id="e-cat-label" class="setting-label"></h3>
+      <div id="e-cat-chips" class="chip-row wrap"></div>
+    </div>
+    <p id="e-note" class="hidden"></p>
+    <div id="editor-actions">
+      <button id="e-delete" type="button" class="hidden"></button>
+      <button id="e-save" type="button"></button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
