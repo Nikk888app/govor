@@ -1,7 +1,7 @@
 /* Govor service worker — cache-first for a fully offline static app.
    Bump CACHE on every deploy so clients pick up new files. */
 
-const CACHE = 'govor-v2';
+const CACHE = 'govor-v3';
 
 const ASSETS = [
   './',
@@ -17,7 +17,9 @@ const ASSETS = [
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(ASSETS))
+      // 'no-cache' forces revalidation with the server; without it the HTTP cache
+      // (GitHub Pages sends max-age=600) can seed the new version with stale files.
+      .then((c) => c.addAll(ASSETS.map((u) => new Request(u, { cache: 'no-cache' }))))
       .then(() => self.skipWaiting())
   );
 });

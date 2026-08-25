@@ -4,7 +4,7 @@
  * Everything is stored locally on the device (localStorage). No server, no accounts.
  */
 
-const APP_VERSION = '1.1';
+const APP_VERSION = '1.2';
 const LANGS = ['hr', 'en', 'it', 'de'];
 
 const LANG_META = {
@@ -754,7 +754,25 @@ elRepeatBtn.addEventListener('click', () => {
 renderAll();
 
 if ('serviceWorker' in navigator) {
+  // A new service worker taking over means new app files are cached and ready.
+  // Reload once so the update shows on this visit rather than the next one.
+  // hadController distinguishes an update from the very first install.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloading) return;
+    if (synth && (synth.speaking || synth.pending)) return; // never cut off speech
+    reloading = true;
+    window.location.reload();
+  });
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => { /* offline-first still works without SW on http */ });
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+      .then((reg) => {
+        reg.update().catch(() => {});
+        // Catch updates published while the app sits open at the bedside.
+        setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000);
+      })
+      .catch(() => { /* offline-first still works without SW on http */ });
   });
 }
