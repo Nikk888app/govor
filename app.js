@@ -4,7 +4,7 @@
  * Everything is stored locally on the device (localStorage). No server, no accounts.
  */
 
-const APP_VERSION = '1.2';
+const APP_VERSION = '1.3';
 const LANGS = ['hr', 'en', 'it', 'de'];
 
 const LANG_META = {
@@ -12,6 +12,19 @@ const LANG_META = {
   en: { flag: '🇬🇧', name: 'English', bcp: 'en-US' },
   it: { flag: '🇮🇹', name: 'Italiano', bcp: 'it-IT' },
   de: { flag: '🇩🇪', name: 'Deutsch', bcp: 'de-DE' },
+};
+
+/* Simulated voice variants: the same system voice with different pitch/rate.
+   Used where the OS ships only one real voice (Croatian on iOS). */
+const VOICE_PRESETS = {
+  hr: [
+    { id: 'normal', pitch: 1.0, rateMul: 1.0,
+      label: { hr: 'Hrvatski — Normalno', en: 'Croatian — Normal', it: 'Croato — Normale', de: 'Kroatisch — Normal' } },
+    { id: 'deep', pitch: 0.72, rateMul: 0.92,
+      label: { hr: 'Hrvatski — Dublji glas', en: 'Croatian — Deeper voice', it: 'Croato — Voce più profonda', de: 'Kroatisch — Tiefere Stimme' } },
+    { id: 'light', pitch: 1.3, rateMul: 1.08,
+      label: { hr: 'Hrvatski — Lakši glas', en: 'Croatian — Lighter voice', it: 'Croato — Voce più chiara', de: 'Kroatisch — Hellere Stimme' } },
+  ],
 };
 
 const I18N = {
@@ -220,11 +233,17 @@ function voicesFor(lang) {
   );
 }
 
+function getPreset(lang) {
+  const sel = store.voices[lang];
+  if (!sel || !sel.startsWith('preset:')) return null;
+  return (VOICE_PRESETS[lang] || []).find((p) => 'preset:' + p.id === sel) || null;
+}
+
 function pickVoice(lang) {
   const list = voicesFor(lang);
   if (!list.length) return null;
   const saved = store.voices[lang];
-  if (saved) {
+  if (saved && !saved.startsWith('preset:')) {
     const m = list.find((v) => v.voiceURI === saved);
     if (m) return m;
   }
@@ -255,7 +274,9 @@ function speak(text, lang, key, opts = {}) {
     warnedLangs.add(lang);
     showBanner(t().noVoice.replace('{lang}', t().langNames[lang]));
   }
-  u.rate = store.rate;
+  const preset = getPreset(lang);
+  u.rate = store.rate * (preset ? preset.rateMul : 1);
+  u.pitch = preset ? preset.pitch : 1;
   u.volume = store.volume;
 
   let finished = false;
@@ -302,7 +323,7 @@ function addRecent(text, lang) {
   store.recent = [
     { text, lang },
     ...store.recent.filter((r) => !(r.text === text && r.lang === lang)),
-  ].slice(0, 6);
+  ].slice(0, 20);
   saveStore();
   renderRecent();
 }
@@ -543,6 +564,14 @@ function renderVoiceRows() {
     auto.value = '';
     auto.textContent = t().auto;
     sel.append(auto);
+    if ((VOICE_PRESETS[l] || []).length && voicesFor(l).length) {
+      for (const p of VOICE_PRESETS[l]) {
+        const o = document.createElement('option');
+        o.value = 'preset:' + p.id;
+        o.textContent = p.label[store.uiLang];
+        sel.append(o);
+      }
+    }
     for (const v of voicesFor(l)) {
       const o = document.createElement('option');
       o.value = v.voiceURI;

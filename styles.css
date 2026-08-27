@@ -141,7 +141,17 @@ input, textarea, select { font: inherit; touch-action: manipulation; }
 .phrase.editable { border-style: dashed; }
 .phrase.add-tile { background: transparent; border: 1.5px dashed var(--line); color: var(--dim); font-size: 19px; }
 
+.recent-grid {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
 .recent-grid .recentchip {
+  flex: 0 0 auto;
+  max-width: 260px;
   min-height: 64px;
   display: flex; align-items: center; gap: 10px;
   padding: 8px 12px;
